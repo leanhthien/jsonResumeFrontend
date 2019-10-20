@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>List User Products</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
+
+    <script src="../../js/globalScript.js"></script>
+    <script src="../../js/resumesScript.js"></script>
+
+</head>
+
+<body>
+
+    <div class="header"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-3 text-center">
+                <span class="profile-pic-container">
+                    <div class="profile-pic">
+                        <img class="media-object img-circle center-block" data-src="holder.js/100x100"
+                            alt="Richard Hendriks"
+                            src="https://s.gravatar.com/avatar/7e6be1e623fb85adde3462fa8587caf2?s=100&amp;r=pg&amp;d=mm"
+                            itemprop="image" />
+                    </div>
+                    <div class="name-and-profession" style="padding-top: 10px;">
+                        <h5></h5>
+                    </div>
+                </span>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                    Share resume
+                </button>
+            </div>
+        </div>
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal body -->
+                    <div class="modal-body">
+
+                        <div class="text-center" style="padding-top: 20px;">
+                            <p>You don't have any resume to share. Let make new one to start!</p>
+                        </div>
+
+                        <p style="padding-bottom: 10px; padding-top: 20px;">Share this link to another for showing your
+                            resume:</p>
+
+                        <div class="text-center" style="padding: 20px;">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" style="padding: 50px;" id="emptyUserResumeList"></div>
+
+        <div id="userResumeList"></div>
+
+        <a href="#" class="btn btn-info" role="button" onclick="return moveToNewResume();">New Resume</a>
+    </div>
+</body>
+
+</html>
