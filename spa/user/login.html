@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Log in</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
+        href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/3.4.1/jquery.min.js"
+        src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+
+    <script src="../../js/globalScript.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+
+        <h2 class="text-center" style="padding-top: 75px; padding-bottom: 10px;">Log in</h2>
+
+        <div id="errorLogin"></div>
+
+        <form id="loginForm" class="form-horizontal" action="login" method="post">
+            <div class="form-group d-flex justify-content-center">
+                <label class="col-sm-1 control-label">Username:</label>
+                <div class="col-sm-6">
+                    <input type="text" name='username' class="form-control" />
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-center">
+                <label class="col-sm-1 control-label">Password:</label>
+                <div class="col-sm-6">
+                    <input type="password" name='password' class="form-control" />
+                </div>
+            </div>
+            <div style="height: 10px;"></div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-info">Log in</button>
+            </div>
+        </form>
+
+        <div class="text-center" style="padding-top: 20px;">
+            Don't have an account? Let <a href="#" onclick=" return moveToRegistration();">registration</a> an account
+        </div>
+    </div>
+
+</body>
+
+</html>
