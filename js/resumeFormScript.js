@@ -51,8 +51,6 @@ function init() {
         }
         return false;
     });
-
-    transferToUserResume();
 }
 
 // Ajax call server for json
@@ -198,44 +196,6 @@ function newResume(url, form) {
     });
 };
 
-function editResume(url, form) {
-    console.log('url', url);
-    var data = form.serializeArray();
-        data.push(
-            {
-            token: TOKEN,
-            userId: USER_ID
-        });
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: data,
-        dataType: 'json',
-        success: function (response) {
-
-            if (response.status == "Success") {
-                window.localStorage.setItem('token', response.data.token);
-                window.localStorage.setItem('userId', response.data.appUser.userId);
-                window.localStorage.setItem('username', response.data.appUser.userName);
-                window.location.replace("welcome.html");
-            } else {
-                $('#errorLogin').html(insertAlert(response.data));
-            }
-
-        },
-
-        error: function (request, status, error) {
-            insertAlert(request.responseText.data);
-            console.log('The page was NOT loaded', error);
-        },
-
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
-        },
-
-    });
-};
-
 function logout(url) {
     console.log('url', url);
     $.ajax({
@@ -269,137 +229,9 @@ function logout(url) {
     return false;
 };
 
-function deleteResume(url, index) {
-    url = BASE_URL + "product/delete";
-    console.log('url', url);
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: {
-            id: index,
-            token: TOKEN,
-            userId: USER_ID
-        },
-        dataType: 'json',
-        success: function (response) {
-            if (response.status == "Success") {
-                listUserResumes(BASE_URL + "product/user")
-            } else {
-                insertAlert("Cannot delete resume!")
-            }
-
-        },
-
-        error: function (error) {
-            insertAlert("Cannot delete resume!")
-            console.log('The page was NOT loaded', error);
-        },
-
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
-        },
-
-    });
-};
-
-function enableTopResume(url, index) {
-    url = BASE_URL + "product/enabled";
-    console.log('url', url);
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: {
-            id: index,
-            token: TOKEN,
-            userId: USER_ID
-        },
-        dataType: 'json',
-        success: function (response) {
-            if (response.status == "Success") {
-                listUserResumes(BASE_URL + "product/user")
-            } else {
-                insertAlert("Cannot enable top resume!")
-            }
-
-        },
-
-        error: function (request, status, error) {
-            ("#errorUserResume").html(request.responseText.data);
-            console.log('The page was NOT loaded', error);
-        },
-
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
-        },
-
-    });
-};
-
 /*
 * Transfer to 
 */
-
-function transferToUserResume() {
-
-    var html = `
-    
-    <div class="header"></div>
-
-    <div id="errorUserResume"></div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-3 text-center">
-                <span class="profile-pic-container">
-                    <div class="profile-pic">
-                        <img class="media-object img-circle center-block" data-src="holder.js/100x100"
-                            alt="Richard Hendriks"
-                            src="https://s.gravatar.com/avatar/7e6be1e623fb85adde3462fa8587caf2?s=100&amp;r=pg&amp;d=mm"
-                            itemprop="image" />
-                    </div>
-                    <div class="name-and-profession" style="padding-top: 10px;">
-                        <h5></h5>
-                    </div>
-                </span>
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
-                    Share resume
-                </button>
-            </div>
-        </div>
-        <!-- The Modal -->
-        <div class="modal" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal body -->
-                    <div class="modal-body">
-
-                        <div class="text-center" style="padding-top: 20px;">
-                            <p>You don't have any resume to share. Let make new one to start!</p>
-                        </div>
-
-                        <p style="padding-bottom: 10px; padding-top: 20px;">Share this link to another for showing your
-                            resume:</p>
-
-                        <div class="text-center" style="padding: 20px;">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-center" style="padding: 50px;" id="emptyUserResumeList"></div>
-
-        <div id="userResumeList"></div>
-
-        <a href="#" class="btn btn-info" role="button" onclick="return transferToResumeForm(0);">New Resume</a>
-    </div>
-    `;
-    $('#initPage').html(html);
-
-    listUserResumes(BASE_URL + "product/user")
-
-}
 
 function transferToResumeForm(id) {
 

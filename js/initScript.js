@@ -6,20 +6,16 @@ var USER_NAME = "";
 
 $(document).ready(function () {
 
-    init();
-
-});
-
-function init() {
-
     BASE_URL = window.localStorage.getItem('baseURL');
 
     if (isEmpty(BASE_URL)) {
         var defaultUrl = "http://localhost:8080/my-app/api/";
         window.localStorage.setItem('baseURL', defaultUrl);
+        transferToSetupDomain();
     }
-
-    transferToSetupDomain();
+    else {
+        transferToLogin();
+    }
 
     $("#setupDomain").submit(function (e) {
 
@@ -35,14 +31,28 @@ function init() {
         return false;
     });
 
-    $("#loginForm").submit(function (e) {
+    // $("#loginForm").submit(function (e) {
 
+    //     alert("Trigger login form action!")
+    //     e.preventDefault();
+
+    //     BASE_URL = window.localStorage.getItem('baseURL');
+    //     var form = $("#loginForm");
+    //     // var url = BASE_URL + form.attr('action');
+    //     var url = BASE_URL + "login";
+
+    //     login(url, form);
+    //     return false;
+    // });
+
+    $("form").submit(function(e) {
+    
         e.preventDefault();
 
         BASE_URL = window.localStorage.getItem('baseURL');
         var form = $(this);
-        var url = BASE_URL + form.attr('action');
-        // var url = BASE_URL + "login";
+        // var url = BASE_URL + form.attr('action');
+        var url = BASE_URL + "login";
 
         login(url, form);
         return false;
@@ -54,8 +64,8 @@ function init() {
 
         BASE_URL = window.localStorage.getItem('baseURL');
         var form = $(this);
-        var url = BASE_URL + form.attr('action');
-        // var url = BASE_URL + "registration";
+        // var url = BASE_URL + form.attr('action');
+        var url = BASE_URL + "registration";
 
         if (validateForm()) {
             registration(url, form);
@@ -63,7 +73,7 @@ function init() {
         return false;
     });
 
-}
+});
 
 /*
 * Transfer in same home.html file
@@ -78,7 +88,7 @@ function transferToSetupDomain() {
         The default domain is http://localhost:8080 (or http://127.0.0.1:8080) if the domain is not given.
     </p>
 
-    <form id="setupDomain" class="form-horizontal" action="" method="post">
+    <form id="setupDomain" class="form-horizontal" method="post">
             <div class="form-group d-flex justify-content-center">
                 <label class="col-sm-1 control-label" >Domain:</label>
                 <div class="col-sm-6">
@@ -100,7 +110,7 @@ function transferToLogin() {
 
         <div id="errorLogin"></div>
 
-        <form id="loginForm" class="form-horizontal" action="login" method="post">
+        <form id="loginForm" class="form-horizontal" method="post">
             <div class="form-group d-flex justify-content-center">
                 <label class="col-sm-1 control-label">Username:</label>
                 <div class="col-sm-6">
@@ -116,7 +126,7 @@ function transferToLogin() {
             <div style="height: 10px;"></div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-info">Log in</button>
+                <button id="loginSubmit" type="submit" class="btn btn-info">Log in</button>
             </div>
         </form>
 
@@ -125,7 +135,7 @@ function transferToLogin() {
         </div>
         
     `;
-    $('#initPage').html(loginHtml);
+    $("#initPage").html(loginHtml);
 }
 
 function transferToRegistration() {
@@ -136,7 +146,7 @@ function transferToRegistration() {
         
         <div style="padding-bottom: 20px;">
             
-            <form id="registrationForm" class="form-horizontal" action="registration" method="post">
+            <form id="registrationForm" class="form-horizontal" method="post">
 
                 <div class="form-group d-flex justify-content-center">
                     <label class="col-sm-2 control-label">Username:</label>
@@ -177,6 +187,7 @@ function transferToRegistration() {
 */
 
 function login(url, form) {
+    alert("Trigger ajax! - " + url)
     console.log('url', url);
     $.ajax({
         type: "POST",
