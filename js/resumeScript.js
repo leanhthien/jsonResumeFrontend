@@ -28,18 +28,18 @@ function init() {
     //     $(".user").hide;
     // }
 
-    $(".header").load("_nav.html");
+    // $(".header").load("_nav.html");
 
     if (isEmpty(BASE_URL) || isEmpty(TOKEN)) {
         window.location.replace("home.html");
     }
 
-    $("form").submit(function(e) {
-    
+    $('.button').click(function(){ 
+
         alert("Trigger new product form action!")
         e.preventDefault();
 
-        var form = $(this);
+        var form = $("#resumeForm");
         var action = form.attr('action');
         if(action.includes("new")) {
             var url = BASE_URL + "product/new";
@@ -70,7 +70,7 @@ function listUserResumes(url) {
         dataType: 'json',
         success: function(response)
         {
-            if (response.messege == "Success") {
+            if (response.status == "Success") {
                 var partHeadHtml = 
 '<div style="padding-top: 25px;">' +
     '<h2>Your Resume List</h2>' +
@@ -86,9 +86,9 @@ function listUserResumes(url) {
                 var partDataHtml = "";
                 $.each(response.data, function(index, element) {
                     var enableStar = '';
-                    var enableButton = `<a href="#" onclick="return enableTopResume('', ` + element.productId + ');" >Enable Top</a>';
+                    var enableButton = `<a href="#" onclick="return enableTopResume('product/enable', ` + element.productId + `);" >Enable Top</a>`;
                     if (element.enabled) {
-                        enableStart = '<a href="#"><i class="fas fa-star"></i></a>';
+                        enableStar = '<a href="#"><i class="fas fa-star"></i></a>';
                         enableButton = '';
                     }
                     var itemHtml = 
@@ -98,9 +98,9 @@ function listUserResumes(url) {
                 '<td>' + element.jobTitle + '</td>' +
                 '<td>' + enableStar + '</td>' +
                 '<td><a href="#" onclick="return moveToViewResume();" >View</a></td>' +
-                '<td><a href="#" onclick="return transferToResumeForm();" >Edit</a></td>' +
+                '<td><a href="#" onclick="return transferToResumeForm(' + element.productId + ');" >Edit</a></td>' +
                 '<td>' + enableButton + '</td>' +
-                `<td><a href="" onclick="return deleteResume('', ` + element.productId + ');" >Delete</a></td>' +
+                `<td><a href="" onclick="return deleteResume('',` + element.productId + ');" >Delete</a></td>' +
             '</tr>';
                     partDataHtml += itemHtml;
         });
@@ -112,7 +112,7 @@ function listUserResumes(url) {
                 $('#userResumeList').html(allPartHtml);
             }
             else {
-                $('#errorLogin').html(insertAlert(response.data));
+                $('#errorUserResume').html(insertAlert(response.data));
             } 
         },
 
@@ -130,7 +130,7 @@ function listUserResumes(url) {
 function detailResume(url, id) {
     console.log('url', url);
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: url,
         data: {
             id : id,
@@ -141,21 +141,27 @@ function detailResume(url, id) {
         success: function (response) {
 
             if (response.status == "Success") {
-                return response.data;
-                //TODO: move to new detail page
-            } else {
-                //TODO: handle
-            }
 
+                $('input[name ="name"]').val(response.data.name);
+                $('input[name ="jobTitle"]').val(response.data.jobTitle);
+                $('input[name ="address"]').val(response.data.address);
+                $('input[name ="telephone"]').val(response.data.telephone);
+                $('input[name ="email"]').val(response.data.email);
+                $('input[name ="website"]').val(response.data.website);
+                $('input[name ="language"]').val(response.data.language);
+                $('input[name ="about"]').val(response.data.about);
+                $('input[name ="workExperience"]').val(response.data.workExperience);
+                
+            } else {
+                console.log("Cannot get data!");
+            }
         },
 
         error: function (error) {
-
             console.log('The page was NOT loaded', error);
         },
 
         complete: function (xhr, status) {
-
             console.log("The request is complete!", status);
         },
 
@@ -172,7 +178,7 @@ function newResume(url, form) {
             userId: USER_ID
         });
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: url,
         data: data,
         dataType: 'json',
@@ -229,17 +235,13 @@ function editResume(url, form) {
             console.log('The page was NOT loaded', error);
         },
 
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
-        },
-
     });
 };
 
 function logout(url) {
     console.log('url', url);
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: url,
         data: {
             token: TOKEN
@@ -259,10 +261,6 @@ function logout(url) {
         error: function (request, status, error) {
             ("#errorUserResume").html(request.responseText.data);
             console.log('The page was NOT loaded', error);
-        },
-
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
         },
 
     });
@@ -295,43 +293,35 @@ function deleteResume(url, index) {
             console.log('The page was NOT loaded', error);
         },
 
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
-        },
-
     });
 };
 
 function enableTopResume(url, index) {
-    url = BASE_URL + "product/enabled";
-    console.log('url', url);
+    var fullUrl = BASE_URL + url;
+    console.log('url -', fullUrl);
     $.ajax({
-        type: "POST",
-        url: url,
+        type: "GET",
+        url: fullUrl,
         data: {
             id: index,
             token: TOKEN,
-            userId: USER_ID
+            userId: USER_ID,
+            username: USER_NAME
         },
         dataType: 'json',
         success: function (response) {
             if (response.status == "Success") {
-                listUserResumes(BASE_URL + "product/user")
+                transferToUserResume();
             } else {
-                insertAlert("Cannot enable top resume!")
+                console.log("Cannot enable top resume!", error);
             }
 
         },
 
         error: function (request, status, error) {
-            ("#errorUserResume").html(request.responseText.data);
+            $("#errorUserResume").html(insertAlert(request.responseText.data));
             console.log('The page was NOT loaded', error);
         },
-
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
-        },
-
     });
 };
 
@@ -342,7 +332,6 @@ function enableTopResume(url, index) {
 function transferToUserResume() {
 
     var html = `
-    
     <div class="header"></div>
 
     <div id="errorUserResume"></div>
@@ -404,93 +393,15 @@ function transferToUserResume() {
 function transferToResumeForm(id) {
 
     var action;
-    var html ;
+
     if (id != 0) {
         action = "product/edit";
-        var resume = detailResume(BASE_URL + "product/detail", id);
-        html = `
-        <body>
-    
-        <div class="container">
-    
-            <h2 class="text-center">Resume Details</h2>
-            <div>
-                <form id="resumeForm" class="form-horizontal" action=`+ action +` method="post">
-    
-                    <input type="hidden" name="productId" />
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Name:</label>
-                        <div class="col">
-                            <input type="text" class="form-control" name="name" required />`+ resume.name + `
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Job Title:</label>
-                        <div class="col">
-                            <input type="text" class="form-control" name="jobTitle" required />` + resume.jobTitle +`
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Address:</label>
-                        <div class="col">
-                            <input type="text" class="form-control" name="address" />` + resume.address +`
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Telephone:</label>
-                        <div class="col">
-                            <input type="text" class="form-control" name="telephone" />` + resume.telephone +`
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Email:</label>
-                        <div class="col">
-                            <input type="text" class="form-control" name="email" />` + resume.email +`
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Website:</label>
-                        <div class="col">
-                            <input type="text" class="form-control" name="website" />` + resume.website + `
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Language:</label>
-                        <div class="col">
-                            <input type="text" class="form-control" name="language" />` + resume.language +`
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">About:</label>
-                        <div class="col">
-                            <textarea class="form-control" rows="3" name="about" >` + resume.about +`</textarea>
-                        </div>
-                    </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Work Experience:</label>
-                <div class="col">
-                    <textarea class="form-control" rows="5" name="workExperience" >` + resume.workExperience + `</textarea>
-                </div>
-            </div>
-    
-            <div class="text-center">
-                <button type="submit" class="btn btn-info">Submit</button>
-                <a href="#" class="btn btn-danger" role="button" onClick=" return transferToUserResume();">Cancel</a>
-            </div>
-            </form>
-        </div>
-    
-        <div style="height:75px;"></div>
-    
-        </div>
-    
-    </body>
-        `;
     }
     else {
         action = "product/new";
-        html = `
+    }
+
+    var html = `
         <body>
     
         <div class="container">
@@ -548,7 +459,7 @@ function transferToResumeForm(id) {
                             <textarea class="form-control" rows="3" name="about" ></textarea>
                         </div>
                     </div>
-            </div>
+    
             <div class="form-group">
                 <label class="col-sm-2 control-label">Work Experience:</label>
                 <div class="col">
@@ -557,7 +468,7 @@ function transferToResumeForm(id) {
             </div>
     
             <div class="text-center">
-                <button type="submit" class="btn btn-info">Submit</button>
+                <button id="buttonResumeForm" type="submit" class="btn btn-info">Submit</button>
                 <a href="#" class="btn btn-danger" role="button" onClick=" return transferToUserResume();">Cancel</a>
             </div>
             </form>
@@ -569,9 +480,12 @@ function transferToResumeForm(id) {
     
     </body>
         `;
-    }
-
+    
     $('#initPage').html(html);
+
+    if (id != 0) {
+        detailResume(BASE_URL + "product/detail", id);
+    }
 }
 
 // Method moving to another page

@@ -1,25 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Set up</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     <link href="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
-          href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
-          rel="stylesheet" media="screen"/>
+        href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
 
     <script src="https://cdn.jsdelivr.net/webjars/jquery/3.4.1/jquery.min.js"
-            src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+        src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
 
-    <script src="js/initScript.js"></script>
+    <script src="js/script.js"></script>
 
 </head>
+
 <body>
-<div id="initPage" class="container">
 
-<!-- This page for set up domain, login and registration -->
+    <div id="navigationHeader"></div>
 
-</div>
+    <div id="mainContainer" class="container">
+
+        <!-- This page for set up domain -->
+
+        <div id="setupDomainContainer" class="page">
+
+            <h2 class="text-center" style="padding-top: 75px; padding-bottom: 10xp;">Set up domain</h2>
+
+            <p class="text-center">
+                Please give the domain of server to start. The struct of a domain is http://www.domain.com </br>
+                The default domain is http://localhost:8080 (or http://127.0.0.1:8080) if the domain is not given.
+            </p>
+
+            <form id="setupDomain" class="form-horizontal" method="post">
+                <div class="form-group d-flex justify-content-center">
+                    <label class="col-sm-1 control-label">Domain:</label>
+                    <div class="col-sm-6">
+                        <input type="text" id='domain' class="form-control" />
+                    </div>
+                </div>
+
+                <div class="text-center" style="padding-top: 10px;">
+                    <button type="submit" class="btn btn-info">Set up</button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- This page for login -->
+
+        <div id="loginContainer" class="page">
+
+            <h2 class="text-center" style="padding-top: 75px; padding-bottom: 10px;">Log in</h2>
+
+            <div id="errorLogin"></div>
+
+            <form id="loginForm" class="form-horizontal" method="post">
+                <div class="form-group d-flex justify-content-center">
+                    <label class="col-sm-1 control-label">Username:</label>
+                    <div class="col-sm-6">
+                        <input type="text" name='username' class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group d-flex justify-content-center">
+                    <label class="col-sm-1 control-label">Password:</label>
+                    <div class="col-sm-6">
+                        <input type="password" name='password' class="form-control" />
+                    </div>
+                </div>
+                <div style="height: 10px;"></div>
+
+                <div class="text-center">
+                    <button id="loginSubmit" type="submit" class="btn btn-info">Log in</button>
+                </div>
+            </form>
+
+            <div class="text-center" style="padding-top: 20px;">
+                Don't have an account? Let <a href="#" onclick=" return transferToRegistration();">registration</a> an
+                account
+            </div>
+
+        </div>
+
+        <!-- This page for registration -->
+
+        <div id="registrationContainer" class="page">
+
+            <h2 class="text-center" style="padding-top: 75px;">Register account</h2>
+
+            <div id="errorLogin"></div>
+
+            <div style="padding-bottom: 20px;">
+
+                <form id="registrationForm" class="form-horizontal" method="post">
+
+                    <div class="form-group d-flex justify-content-center">
+                        <label class="col-sm-2 control-label">Username:</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="username" required />
+                        </div>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <label class="col-sm-2 control-label">Password:</label>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" name="password" required />
+                        </div>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <label class="col-sm-2 control-label">Retype Password:</label>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" name="retypePassword" required />
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+
+            <div id="samePassword"></div>
+
+            <div class="text-center" style="padding-top: 20px;">
+                Already have an account? Let <a href="#" onclick=" return transferToLogin();">log in</a>
+            </div>
+
+        </div>
+
+        <!-- This page for user resume -->
+
+        <div id="userResumesContainer" class="page">
+
+            <div id="errorUserResume"></div>
+
+            <div class="container" style="padding-top: 75px; padding-bottom: 75xp;">
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <span class="profile-pic-container">
+                            <div class="profile-pic">
+                                <img class="media-object img-circle center-block" data-src="holder.js/100x100"
+                                    alt="Richard Hendriks"
+                                    src="https://s.gravatar.com/avatar/7e6be1e623fb85adde3462fa8587caf2?s=100&amp;r=pg&amp;d=mm"
+                                    itemprop="image" />
+                            </div>
+                            <div class="name-and-profession" style="padding-top: 10px;">
+                                <h5></h5>
+                            </div>
+                        </span>
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                            Share resume
+                        </button>
+                    </div>
+                </div>
+                <!-- The Modal -->
+                <div class="modal" id="myModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal body -->
+                            <div class="modal-body">
+
+                                <div class="text-center" style="padding-top: 20px;">
+                                    <p>You don't have any resume to share. Let make new one to start!</p>
+                                </div>
+
+                                <p style="padding-bottom: 10px; padding-top: 20px;">Share this link to another for
+                                    showing your
+                                    resume:</p>
+
+                                <div class="text-center" style="padding: 20px;">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center" style="padding: 50px;" id="emptyUserResumeList"></div>
+
+                <div id="userResumeList"></div>
+
+                <a href="#" class="btn btn-info" role="button" onclick="return transferToResumeForm(0);">New Resume</a>
+            </div>
+
+        </div>
+
+        <!-- This page for resume form -->
+
+        <div id="resumeFormContainer" class="page">
+
+            <h2 class="text-center" style="padding-top: 75px; padding-bottom: 75xp;">Resume Details</h2>
+            <div>
+                <form id="resumeForm" class="form-horizontal" method="post">
+
+                    <input type="hidden" name="productId" />
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Name:</label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="name" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Job Title:</label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="jobTitle" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Address:</label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="address" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Telephone:</label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="telephone" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Email:</label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="email" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Website:</label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="website" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Language:</label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="language" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">About:</label>
+                        <div class="col">
+                            <textarea class="form-control" rows="3" name="about"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Work Experience:</label>
+                        <div class="col">
+                            <textarea class="form-control" rows="5" name="workExperience"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="buttonResumeForm" type="submit" class="btn btn-info">Submit</button>
+                        <a href="#" class="btn btn-danger" role="button"
+                            onClick=" return transferToUserResume();">Cancel</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- This page for detail resume -->
+
+
+
+    </div>
+
 
 </body>
+
 </html>
