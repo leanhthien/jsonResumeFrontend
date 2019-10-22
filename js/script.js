@@ -3,7 +3,7 @@ var BASE_URL = ""; //Server domain to connect
 var TOKEN = ""; //Token to connect server
 var USER_ID = ""; // userId of user
 var USER_NAME = ""; // username of user
-
+var data;
 
 $(document).ready(function () {
 
@@ -85,16 +85,22 @@ function setupListener() {
     });
 
     $("#resumeForm").submit(function (e) {
-
+        alert("Trigger resumeForm submit!");
         e.preventDefault();
 
         var BASE_URL = window.localStorage.getItem('baseURL');
         var form = $(this);
-        var url = BASE_URL + form.attr('action');
-
-        if (validateForm()) {
-            registration(url, form);
+        var action = form.attr('action');
+        var url = BASE_URL + action;
+        
+        if (action.includes('new')) {
+            data = form.serializeArray();
+            newResume(url, form);
         }
+        else {
+            editResume(url, form);
+        }
+        
         return false;
     });
 
@@ -158,15 +164,18 @@ function registration(url, form) {
                 window.localStorage.setItem('token', response.data.token);
                 window.localStorage.setItem('userId', response.data.appUser.userId);
                 window.localStorage.setItem('username', response.data.appUser.userName);
-                setGlobalVariable(BASE_URL, TOKEN, USER_ID, USER_NAME);
+                BASE_URL = window.localStorage.getItem('baseURL');
+                TOKEN = window.localStorage.getItem('token');
+                USER_ID = window.localStorage.getItem('userId');
+                USER_NAME = window.localStorage.getItem('username');
                 transferToUserResume();
             } else {
-                $('#errorResgistration').html(insertAlert(response.data));
+                $('#errorRegistration').html(insertAlert(response.data));
             }
         },
 
         error: function (request, status, error) {
-            $('#errorResgistration').html(insertAlert(jQuery.parseJSON(request.responseText).data));
+            $('#errorRegistration').html(insertAlert(jQuery.parseJSON(request.responseText).data));
             console.log('The page was NOT loaded', error);
         },
 
@@ -289,15 +298,15 @@ function newResume(url, form) {
     console.log('url', url);
 
     var data = form.serializeArray();
-        data.push(
-            {
-            token: TOKEN,
-            userId: USER_ID
-        });
+    data.push(
+        {name: 'token', value: TOKEN},
+        {name: 'userId', value: USER_ID},
+        {name: 'username', value: USER_NAME}
+    );
     $.ajax({
         type: "GET",
         url: url,
-        data: data,
+        data: $.param(data),
         dataType: 'json',
         success: function (response) {
 
@@ -320,15 +329,15 @@ function newResume(url, form) {
 function editResume(url, form) {
     console.log('url', url);
     var data = form.serializeArray();
-        data.push(
-            {
-            token: TOKEN,
-            userId: USER_ID
-        });
+    data.push(
+        {name: 'token', value: TOKEN},
+        {name: 'userId', value: USER_ID},
+        {name: 'username', value: USER_NAME}
+    );
     $.ajax({
         type: "POST",
         url: url,
-        data: data,
+        data: $.param(data),
         dataType: 'json',
         success: function (response) {
 
