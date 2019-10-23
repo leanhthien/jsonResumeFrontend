@@ -4,6 +4,7 @@ var TOKEN = ""; //Token to connect server
 var USER_ID = ""; // userId of user
 var USER_NAME = ""; // username of user
 var data;
+var PRODUCT_ID = 0;
 
 $(document).ready(function () {
 
@@ -514,6 +515,7 @@ function transferToUserResume() {
         $('[itemprop="name"]').html(USER_NAME);
         listUserResumes(BASE_URL + "product/user");
     } else {
+        PRODUCT_ID = id;
         transferToResumeForm(id);
     }
 
@@ -536,18 +538,15 @@ function transferToResumeForm(id) {
     return false;
 }
 
-function transferToHome() {
-    var id = getParam('edit');
-    if (!isEmpty(id)) {
-        var domain = location.origin;
-        if (!isDomainOfServer(domain)) {
-            domain = "home.html";
-        }
-        window.location.replace(domain);
-    }
-    else {
+function backInEdit() {
+    if (PRODUCT_ID == 0) {
         transferToUserResume();
     }
+    else {
+        window.history.pushState({}, document.title, "");
+        moveToViewResume(PRODUCT_ID)
+    }
+
 }
 
 function transfer(elementId, productId) {
@@ -569,12 +568,3 @@ function validateForm() {
     }
     return true;
 }
-
-
-// function isEmpty(str) {
-//     return (!str || 0 === str.length);
-// }
-
-// function insertAlert(messege) {
-//     return '<div class="alert alert-danger" role="alert">' + messege + '</div>';
-// }
