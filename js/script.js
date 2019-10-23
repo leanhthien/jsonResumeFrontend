@@ -454,6 +454,7 @@ function logout(url) {
                 window.localStorage.removeItem("token");
                 window.localStorage.removeItem("userId");
                 window.localStorage.removeItem("username");
+                setupNavigation();
                 transferToLogin();
             } else {
                 alert("Cannot logout!");
