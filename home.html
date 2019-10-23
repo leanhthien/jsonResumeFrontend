@@ -11,6 +11,10 @@
     <script src="https://cdn.jsdelivr.net/webjars/jquery/3.4.1/jquery.min.js"
         src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
+
     <script language="JavaScript" type="text/javascript" src="js/utilsScript.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/script.js"></script>
 
@@ -175,7 +179,7 @@
                                 <h5></h5>
                             </div>
                         </span>
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
+                        <button id="modalButton" type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
                             Share resume
                         </button>
                     </div>
@@ -191,9 +195,13 @@
                                     <p>You don't have any resume to share. Let make new one to start!</p>
                                 </div>
 
-                                <p style="padding-bottom: 10px; padding-top: 20px;">Share this link to another for showing your
-                                    resume:</p>
-
+                                <div id="share-link-modal">
+                                    <p style="padding-bottom: 10px; padding-top: 20px;">
+                                        Share this link to another for showing your resume:
+                                    </p>
+                                    <input id="share-link-content" type="text" class="form-control" readonly/>
+                                </div>
+                                
                                 <div class="text-center" style="padding: 20px;">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                 </div>
@@ -201,6 +209,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- /.modal -->
 
                 <div class="text-center" style="padding: 50px;" id="emptyUserResumeList"></div>
 

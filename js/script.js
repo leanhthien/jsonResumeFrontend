@@ -8,6 +8,7 @@ var data;
 $(document).ready(function () {
 
     // $("#navigationHeader").load("_nav.html");
+    setupNavigation();
     checkDomain();
     setupListener();
 
@@ -141,7 +142,7 @@ function login(url, form) {
                 TOKEN = window.localStorage.getItem('token');
                 USER_ID = window.localStorage.getItem('userId');
                 USER_NAME = window.localStorage.getItem('username');
-
+                
                 var callback = getParam('callback');
 
                 if (!isEmpty(callback)) {
@@ -149,6 +150,7 @@ function login(url, form) {
                     moveToViewResume(productId);
                 }
                 else {
+                    setupNavigation();
                     transferToUserResume();
                 }
                 
@@ -211,7 +213,11 @@ function listUserResumes(url) {
         {
             if (response.status == "Success") {
                 if (response.data.length === 0) {
-                    $('#userResumeList').html(`<div class="text-center" style="padding-bottom: 75px;">You don't have any resume. Let create new resume!</div>`);
+                    $('#userResumeList').html(
+                        `<div class="text-center" style="padding-bottom: 75px;">You don't have any resume. Let create new resume!</div>`
+                        );
+                    $('#empty-resume-modal').show();  
+                    $('#share-link-modal').hide();
                 }
                 else {
                     var partHeadHtml = 
@@ -246,12 +252,14 @@ function listUserResumes(url) {
                             '</tr>';
                                     partDataHtml += itemHtml;
                         });
-                        var partEndHtml =
+                    var partEndHtml =
                         '</table>' +
-                '</div>';
-                                var allPartHtml = partHeadHtml + partDataHtml + partEndHtml;
-                                $('#userResumeList').html(allPartHtml);
-                        
+                    '</div>';
+                    var allPartHtml = partHeadHtml + partDataHtml + partEndHtml;
+                    $('#userResumeList').html(allPartHtml);
+                    $('#empty-resume-modal').hide();  
+                    $('#share-link-modal').show(); 
+                    $('#share-link-content').html(location.hostname + "?url=" + BASE_URL + "&name=" + USER_NAME);   
                 }
             }
             else {
@@ -485,6 +493,7 @@ function transferToRegistration() {
 function transferToUserResume() {
     $(".page").hide();
     $("#userResumesContainer").show();
+    setupNavigation();
     listUserResumes(BASE_URL + "product/user");
     return false;
 }
