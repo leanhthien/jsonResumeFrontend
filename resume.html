@@ -1288,7 +1288,32 @@
 
 <body itemscope="itemscope" itemtype="http://schema.org/Person">
 
-    <div id="navigationHeader"></div>
+    <div id="navigationHeader">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+               <div class="navbar-header">
+                  <a class="navbar-brand" href="#" onclick="return transferToHomePage(1);">Json Resume</a>
+               </div>
+               <ul class="nav navbar-nav navbar-right">
+                  <li>
+                     <a class="guestNavigation" href="#" onclick="return transferToHomePage(2);">Sign up</a>
+                  </li>
+                  <li>
+                     <a class="guestNavigation" href="#" onclick="return transferToHomePage(3);">Sign in</a>
+                  </li>
+                  <li>
+                     <a class="userNavigation" href="#" onclick="return transferToHomePage(5);">Create resume</a>
+                  </li>
+                  <li>
+                     <a class="userNavigation" id="usernameNavigation" href="#" onclick="return transferToHomePage(6);"></a>
+                  </li>
+                  <li>
+                     <a class="userNavigation" href="#" onclick="return transferToHomePage(7);">Log out</a>
+                  </li>
+               </ul>
+            </div>
+         </nav>
+    </div>
 
     <div class="container-fluid">
         <div class="row main clearfix">

@@ -16,7 +16,7 @@ $(document).ready(function () {
 
 function init() {
 
-    $("#navigationHeader").load("_navForVer3.html");
+    // $("#navigationHeader").load("_navForVer3.html");
 
     setupNavigation();
 
@@ -110,4 +110,5 @@ function detailResume(url, id, name) {
 
 function transferToHomePage(id) {
     window.location.replace(domain + "?nav=" + id);
+    return false;
 };

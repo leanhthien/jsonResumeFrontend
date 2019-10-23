@@ -5,6 +5,7 @@ var USER_ID = ""; // userId of user
 var USER_NAME = ""; // username of user
 var data;
 var PRODUCT_ID = 0;
+var domain= "";
 
 $(document).ready(function () {
 
@@ -21,6 +22,12 @@ function checkDomain() {
     TOKEN = window.localStorage.getItem('token');
     USER_ID = window.localStorage.getItem('userId');
     USER_NAME = window.localStorage.getItem('username');
+
+    domain = location.origin;
+
+    if(!isDomainOfServer(domain)) {
+        domain = "home.html";
+    }
 
     if (isEmpty(BASE_URL)) {
         transferToSetupDomain();
@@ -503,7 +510,7 @@ function transferToUserResume() {
         }
     }
     else {
-        window.history.pushState({}, document.title, "");
+        window.history.pushState({}, document.title, domain);
         getNav(nav);
     }
     return false;
@@ -530,32 +537,33 @@ function backInEdit() {
         transferToUserResume();
     }
     else {
-        window.history.pushState({}, document.title, "");
+        window.history.pushState({}, document.title, domain);
         moveToViewResume(PRODUCT_ID)
     }
 }
 
 function getNav(id) {
     switch(id) {
-        case 1:
-            transferToSetupDomain();
+        case '1':
+            checkDomain();
             break;
-        case 2:
+        case '2':
             transferToRegistration();
             break;
-        case 3:
+        case '3':
             transferToLogin();
             break;
-        case 4:
+        case '4':
             transferToResumeForm(0);
             break;
-        case 5:
+        case '5':
             transferToUserResume();
             break;
-        case 6:
+        case '6':
             logout('logout');
             break;
         default:
+            console.log("Unknown id!", id)
             transferToSetupDomain();
       }
 }
