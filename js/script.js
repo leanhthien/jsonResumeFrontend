@@ -365,13 +365,24 @@ function editResume(url, form) {
             if (response.status == "Success") {
                 moveToViewResume(response.data.productId);
             } else {
-                $('#errorLogin').html(insertAlert(response.data));
+                var id = getParam('edit');
+                if(isEmpty(id)) {
+                    $('#errorLogin').html(insertAlert(response.data));
+                }
+                else {
+                    window.location.replace("404Page.html");
+                }
             }
 
         },
 
         error: function (request, status, error) {
-            $('#errorLogin').html(insertAlert(request.responseText.data));
+            if(isEmpty(id)) {
+                $('#errorLogin').html(insertAlert(request.responseText.data));
+            }
+            else {
+                window.location.replace("404Page.html");
+            }
             console.log('The page was NOT loaded', error);
         },
 
@@ -489,10 +500,20 @@ function transferToRegistration() {
 }
 
 function transferToUserResume() {
-    $(".page").hide();
-    $("#userResumesContainer").show();
+
     setupNavigation();
-    listUserResumes(BASE_URL + "product/user");
+
+    var id = getParam('edit');
+    if(isEmpty(id)) {
+        $(".page").hide();
+        $("#userResumesContainer").show();
+        $('[itemprop="name"]').html(USER_NAME);
+        listUserResumes(BASE_URL + "product/user");
+    }
+    else {
+        transferToResumeForm(id);
+    }
+
     return false;
 }
 
@@ -520,7 +541,6 @@ function transfer(elementId, productId) {
 }
 
 function moveToViewResume(productId) {
-
     window.location.replace("resume.html?id=" + productId);
 }
 

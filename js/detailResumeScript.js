@@ -22,6 +22,7 @@ function init() {
         var username = getParam('name');
         var fullUrl = baseUrl + "view";
         detailResume(fullUrl, "", username );
+        $('#action-button').hide();
     }
     else {
         var productId = getParam('id');
@@ -37,6 +38,14 @@ function init() {
                 USER_NAME = window.localStorage.getItem('username');
                 var fullUrl = BASE_URL + "product/detail";
                 detailResume(fullUrl, productId, "");
+                $('#action-button').show();
+                $('#edit').click(function(){
+                    window.location.replace("Home.html?edit=" + productId);
+                });
+            
+                $('#back').click(function(){
+                    window.location.replace("Home.html");
+                });
             }
         }
         else {
@@ -44,6 +53,8 @@ function init() {
             console.log("Cannot find the page!");
         }
     }
+
+    
 
 };
 
