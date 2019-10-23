@@ -539,8 +539,8 @@ function transferToResumeForm(id) {
 function transferToHome() {
     var id = getParam('edit');
     if (!isEmpty(id)) {
-        var domain = location.hostname;
-        if (isEmpty(domain)) {
+        var domain = location.origin;
+        if (!isDomainOfServer(domain)) {
             domain = "home.html";
         }
         window.location.replace(domain);

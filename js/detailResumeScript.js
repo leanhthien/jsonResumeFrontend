@@ -26,13 +26,10 @@ function init() {
     }
     else {
         var productId = getParam('id');
-        var domain = location.hostname;
+        var domain = location.origin;
 
-        if(isEmpty(domain)) {
-            dommain = "home.html";
-        }
-        else {
-            domain = "https://" + location.hostname;
+        if(!isDomainOfServer(domain)) {
+            domain = "home.html";
         }
 
         if (!isEmpty(productId)) {
@@ -48,7 +45,6 @@ function init() {
                 var fullUrl = BASE_URL + "product/detail";
                 detailResume(fullUrl, productId, "");
                 $('#action-button').show();
-
 
                 $('#edit').click(function(){
                     console.log("Trigger edit button!");

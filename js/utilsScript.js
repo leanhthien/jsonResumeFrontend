@@ -20,3 +20,10 @@ function isEmpty(str) {
 function insertAlert(messege) {
     return '<div class="alert alert-danger" role="alert">' + messege + '</div>';
 }
+
+function isDomainOfServer(url) {
+    if (url.includes("file://")){
+        return false;
+    }
+    return true;
+}
