@@ -5,8 +5,10 @@
 
 function setupNavigation() {
 
+    console.log("Trigger set up navigation")
+
     var token = window.localStorage.getItem('token');
-    var username = window.localStorage.getItem('baseURL');
+    var username = window.localStorage.getItem('username');
 
     if (isEmpty(token)) {
         $('.guestNavigation').show();

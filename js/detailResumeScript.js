@@ -6,7 +6,7 @@ var TOKEN = ""; //Token to connect server
 var USER_ID = "";
 var USER_NAME = "";
 var PRODUCT_ID = 0;
-
+var domain= "";
 
 $(document).ready(function () {
 
@@ -16,11 +16,11 @@ $(document).ready(function () {
 
 function init() {
 
-    var baseUrl = getParam('url');
-
     $("#navigationHeader").load("_navForVer3.html");
 
     setupNavigation();
+
+    var baseUrl = getParam('url');
 
     if (!isEmpty(baseUrl)) {
         var username = getParam('name');
@@ -30,7 +30,7 @@ function init() {
     }
     else {
         var productId = getParam('id');
-        var domain = location.origin;
+        domain = location.origin;
 
         if(!isDomainOfServer(domain)) {
             domain = "home.html";
@@ -51,7 +51,6 @@ function init() {
                 $('#action-button').show();
 
                 $('#edit').click(function(){
-                    console.log("Trigger edit button!");
                     window.location.replace(domain + "?edit=" + productId);
                 });
             
@@ -107,4 +106,8 @@ function detailResume(url, id, name) {
         },
 
     });
+};
+
+function transferToHomePage(id) {
+    window.location.replace(domain + "?nav=" + id);
 };

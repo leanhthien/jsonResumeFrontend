@@ -241,7 +241,7 @@ function listUserResumes(url) {
                     } else {
                         domain = "https://" + location.hostname;
                     }
-                    $('#share-link-content').val(domain + "?url=" + BASE_URL + "&name=" + USER_NAME);
+                    $('#share-link-content').val(domain + "/resume.html?url=" + BASE_URL + "&name=" + USER_NAME);
                 }
             } else {
                 $('#errorUserResume').html(insertAlert(response.data));
@@ -257,7 +257,7 @@ function listUserResumes(url) {
 };
 
 function detailResume(url, id) {
-    console.log('url', url);
+    console.log('url -', url);
     $.ajax({
         type: "GET",
         url: url,
@@ -290,16 +290,11 @@ function detailResume(url, id) {
             console.log('The page was NOT loaded', error);
         },
 
-        complete: function (xhr, status) {
-            console.log("The request is complete!", status);
-        },
-
     });
 };
 
 function newResume(url, form) {
-    console.log('url', url);
-
+    console.log('url -', url);
     var data = form.serializeArray();
     data.push({
         name: 'token',
@@ -335,7 +330,7 @@ function newResume(url, form) {
 };
 
 function editResume(url, form) {
-    console.log('url', url);
+    console.log('url -', url);
     var data = form.serializeArray();
     data.push({
         name: 'token',
@@ -381,7 +376,7 @@ function editResume(url, form) {
 
 function deleteResume(url, index) {
     var fullUrl = BASE_URL + url;
-    console.log('url', fullUrl);
+    console.log('url -', fullUrl);
     $.ajax({
         type: "GET",
         url: fullUrl,
@@ -493,17 +488,24 @@ function transferToUserResume() {
 
     setupNavigation();
 
-    var id = getParam('edit');
-    if (isEmpty(id)) {
-        $(".page").hide();
-        $("#userResumesContainer").show();
-        $('[itemprop="name"]').html(USER_NAME);
-        listUserResumes(BASE_URL + "product/user");
-    } else {
-        PRODUCT_ID = id;
-        transferToResumeForm(id);
-    }
+    var nav = getParam('nav');
 
+    if (isEmpty(nav)) {
+        var id = getParam('edit');
+        if (isEmpty(id)) {
+            $(".page").hide();
+            $("#userResumesContainer").show();
+            $('[itemprop="name"]').html(USER_NAME);
+            listUserResumes(BASE_URL + "product/user");
+        } else {
+            PRODUCT_ID = id;
+            transferToResumeForm(id);
+        }
+    }
+    else {
+        window.history.pushState({}, document.title, "");
+        getNav(nav);
+    }
     return false;
 }
 
@@ -531,7 +533,31 @@ function backInEdit() {
         window.history.pushState({}, document.title, "");
         moveToViewResume(PRODUCT_ID)
     }
+}
 
+function getNav(id) {
+    switch(id) {
+        case 1:
+            transferToSetupDomain();
+            break;
+        case 2:
+            transferToRegistration();
+            break;
+        case 3:
+            transferToLogin();
+            break;
+        case 4:
+            transferToResumeForm(0);
+            break;
+        case 5:
+            transferToUserResume();
+            break;
+        case 6:
+            logout('logout');
+            break;
+        default:
+            transferToSetupDomain();
+      }
 }
 
 function moveToViewResume(productId) {
