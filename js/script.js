@@ -262,6 +262,9 @@ function listUserResumes(url) {
                     if(isEmpty(domain)) {
                         dommain = location.pathname;
                     }
+                    else {
+                        domain = "https://" + location.hostname;
+                    }
                     $('#share-link-content').val(domain + "?url=" + BASE_URL + "&name=" + USER_NAME);   
                 }
             }

@@ -31,6 +31,9 @@ function init() {
         if(isEmpty(domain)) {
             dommain = "home.html";
         }
+        else {
+            domain = "https://" + location.hostname;
+        }
 
         if (!isEmpty(productId)) {
             TOKEN = window.localStorage.getItem('token');
@@ -48,7 +51,8 @@ function init() {
 
 
                 $('#edit').click(function(){
-                    window.location.replace(domain + "?edit=" + productId);
+                    console.log("Trigger edit button!");
+                    window.location.replace(dommain + "?edit=" + productId);
                 });
             
                 $('#back').click(function(){
