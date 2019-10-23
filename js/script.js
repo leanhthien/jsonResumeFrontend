@@ -23,12 +23,10 @@ function checkDomain() {
 
     if (isEmpty(BASE_URL)) {
         transferToSetupDomain();
-    }
-    else {
+    } else {
         if (isEmpty(TOKEN)) {
             transferToLogin();
-        }
-        else {
+        } else {
             transferToUserResume();
         }
     }
@@ -45,8 +43,7 @@ function setupListener() {
         if (!isEmpty(url)) {
             BASE_URL = url + "/my-app/api/";
             window.localStorage.setItem('baseURL', BASE_URL);
-        }
-        else {
+        } else {
             if (isEmpty(baseUrl)) {
                 BASE_URL = "http://127.0.0.1:8080/my-app/api/";
                 window.localStorage.setItem('baseURL', BASE_URL);
@@ -84,22 +81,21 @@ function setupListener() {
     });
 
     $("#resumeForm").submit(function (e) {
-        
+
         e.preventDefault();
 
         var BASE_URL = window.localStorage.getItem('baseURL');
         var form = $(this);
         var action = form.attr('action');
         var url = BASE_URL + action;
-        
+
         if (action.includes('new')) {
             data = form.serializeArray();
             newResume(url, form);
-        }
-        else {
+        } else {
             editResume(url, form);
         }
-        
+
         return false;
     });
 
@@ -112,8 +108,7 @@ function setupNavigation() {
     if (isEmpty(TOKEN)) {
         $('.guestNavigation').show();
         $('.userNavigation').hide();
-    }
-    else {
+    } else {
         $('.guestNavigation').hide();
         $('.userNavigation').show();
         $('#usernameNavigation').html(USER_NAME);
@@ -122,8 +117,8 @@ function setupNavigation() {
 };
 
 /* 
-* Ajax call
-*/
+ * Ajax call
+ */
 
 function login(url, form) {
     console.log('url -', url);
@@ -141,22 +136,20 @@ function login(url, form) {
                 TOKEN = window.localStorage.getItem('token');
                 USER_ID = window.localStorage.getItem('userId');
                 USER_NAME = window.localStorage.getItem('username');
-                
+
                 var callback = getParam('callback');
 
                 if (!isEmpty(callback)) {
                     var productId = getParam('id');
                     moveToViewResume(productId);
-                }
-                else {
+                } else {
                     setupNavigation();
                     transferToUserResume();
                 }
-                
+
             } else {
                 $('#errorLogin').html(insertAlert(response.data));
             }
-
         },
 
         error: function (request, status, error) {
@@ -206,71 +199,67 @@ function listUserResumes(url) {
             username: USER_NAME,
             token: TOKEN,
             userId: USER_ID
-        }, 
+        },
         dataType: 'json',
-        success: function(response)
-        {
+        success: function (response) {
             if (response.status == "Success") {
                 if (response.data.length === 0) {
                     $('#userResumeList').html(
                         `<div class="text-center" style="padding-bottom: 75px;">You don't have any resume. Let create new resume!</div>`
-                        );
-                    $('#empty-resume-modal').show();  
+                    );
+                    $('#empty-resume-modal').show();
                     $('#share-link-modal').hide();
-                }
-                else {
-                    var partHeadHtml = 
-                    '<div style="padding-top: 25px;">' +
+                } else {
+                    var partHeadHtml =
+                        '<div style="padding-top: 25px;">' +
                         '<h2>Your Resume List</h2>' +
-                            '<table class="table table-striped">' +
-                                '<tr>' + 
-                                    '<th>Id</th>' +
-                                    '<th>Name</th>' +
-                                    '<th>Job Title</th>' +
-                                    '<th>Top</th>' +
-                                    '<th colspan="4">Action</th>' +
-                                '</tr>';
-                                var partDataHtml = "";
-                                $.each(response.data, function(index, element) {
-                                    var enableStar = '';
-                                    var enableButton = `<a href="#" onclick="return enableTopResume('product/enable', ` + element.productId + `);" >Enable Top</a>`;
-                                    if (element.enabled) {
-                                        enableStar = '<a href="#"><i class="fas fa-star"></i></a>';
-                                        enableButton = '';
-                                    }
-                                    var itemHtml = 
+                        '<table class="table table-striped">' +
+                        '<tr>' +
+                        '<th>Id</th>' +
+                        '<th>Name</th>' +
+                        '<th>Job Title</th>' +
+                        '<th>Top</th>' +
+                        '<th colspan="4">Action</th>' +
+                        '</tr>';
+                    var partDataHtml = "";
+                    $.each(response.data, function (index, element) {
+                        var enableStar = '';
+                        var enableButton = `<a href="#" onclick="return enableTopResume('product/enable', ` + element.productId + `);" >Enable Top</a>`;
+                        if (element.enabled) {
+                            enableStar = '<a href="#"><i class="fas fa-star"></i></a>';
+                            enableButton = '';
+                        }
+                        var itemHtml =
                             '<tr>' +
-                                '<td>' + element.productId + '</td>' +
-                                '<td>' + element.name + '</td>' +
-                                '<td>' + element.jobTitle + '</td>' +
-                                '<td>' + enableStar + '</td>' +
-                                '<td><a href="#" onclick="return moveToViewResume(' + element.productId + ');" >View</a></td>' +
-                                '<td><a href="#" onclick="return transferToResumeForm(' + element.productId + ');" >Edit</a></td>' +
-                                '<td>' + enableButton + '</td>' +
-                                `<td><a href="" onclick="return deleteResume('product/delete',` + element.productId + ');" >Delete</a></td>' +
+                            '<td>' + element.productId + '</td>' +
+                            '<td>' + element.name + '</td>' +
+                            '<td>' + element.jobTitle + '</td>' +
+                            '<td>' + enableStar + '</td>' +
+                            '<td><a href="#" onclick="return moveToViewResume(' + element.productId + ');" >View</a></td>' +
+                            '<td><a href="#" onclick="return transferToResumeForm(' + element.productId + ');" >Edit</a></td>' +
+                            '<td>' + enableButton + '</td>' +
+                            `<td><a href="" onclick="return deleteResume('product/delete',` + element.productId + ');" >Delete</a></td>' +
                             '</tr>';
-                                    partDataHtml += itemHtml;
-                        });
+                        partDataHtml += itemHtml;
+                    });
                     var partEndHtml =
                         '</table>' +
-                    '</div>';
+                        '</div>';
                     var allPartHtml = partHeadHtml + partDataHtml + partEndHtml;
                     $('#userResumeList').html(allPartHtml);
-                    $('#empty-resume-modal').hide();  
-                    $('#share-link-modal').show(); 
+                    $('#empty-resume-modal').hide();
+                    $('#share-link-modal').show();
                     var domain = location.hostname;
-                    if(isEmpty(domain)) {
+                    if (isEmpty(domain)) {
                         dommain = location.pathname;
-                    }
-                    else {
+                    } else {
                         domain = "https://" + location.hostname;
                     }
-                    $('#share-link-content').val(domain + "?url=" + BASE_URL + "&name=" + USER_NAME);   
+                    $('#share-link-content').val(domain + "?url=" + BASE_URL + "&name=" + USER_NAME);
                 }
-            }
-            else {
+            } else {
                 $('#errorUserResume').html(insertAlert(response.data));
-            } 
+            }
         },
 
         error: function (request, status, error) {
@@ -278,7 +267,7 @@ function listUserResumes(url) {
             console.log('The page was NOT loaded', error);
         },
 
-      });
+    });
 };
 
 function detailResume(url, id) {
@@ -287,7 +276,7 @@ function detailResume(url, id) {
         type: "GET",
         url: url,
         data: {
-            id : id,
+            id: id,
             token: TOKEN,
             userId: USER_ID
         },
@@ -305,7 +294,7 @@ function detailResume(url, id) {
                 $('input[name ="language"]').val(response.data.language);
                 $('input[name ="about"]').val(response.data.about);
                 $('input[name ="workExperience"]').val(response.data.workExperience);
-                
+
             } else {
                 console.log("Cannot get data!");
             }
@@ -326,11 +315,16 @@ function newResume(url, form) {
     console.log('url', url);
 
     var data = form.serializeArray();
-    data.push(
-        {name: 'token', value: TOKEN},
-        {name: 'userId', value: USER_ID},
-        {name: 'username', value: USER_NAME}
-    );
+    data.push({
+        name: 'token',
+        value: TOKEN
+    }, {
+        name: 'userId',
+        value: USER_ID
+    }, {
+        name: 'username',
+        value: USER_NAME
+    });
     $.ajax({
         type: "GET",
         url: url,
@@ -339,7 +333,7 @@ function newResume(url, form) {
         success: function (response) {
 
             if (response.status == "Success") {
-                moveToViewResume(response.data.productId);   
+                moveToViewResume(response.data.productId);
             } else {
                 $('#errorResumeForm').html(insertAlert(response.data));
             }
@@ -357,11 +351,16 @@ function newResume(url, form) {
 function editResume(url, form) {
     console.log('url', url);
     var data = form.serializeArray();
-    data.push(
-        {name: 'token', value: TOKEN},
-        {name: 'userId', value: USER_ID},
-        {name: 'username', value: USER_NAME}
-    );
+    data.push({
+        name: 'token',
+        value: TOKEN
+    }, {
+        name: 'userId',
+        value: USER_ID
+    }, {
+        name: 'username',
+        value: USER_NAME
+    });
     $.ajax({
         type: "POST",
         url: url,
@@ -373,10 +372,9 @@ function editResume(url, form) {
                 moveToViewResume(response.data.productId);
             } else {
                 var id = getParam('edit');
-                if(isEmpty(id)) {
+                if (isEmpty(id)) {
                     $('#errorLogin').html(insertAlert(response.data));
-                }
-                else {
+                } else {
                     window.location.replace("404Page.html");
                 }
             }
@@ -384,10 +382,9 @@ function editResume(url, form) {
         },
 
         error: function (request, status, error) {
-            if(isEmpty(id)) {
+            if (isEmpty(id)) {
                 $('#errorLogin').html(insertAlert(request.responseText.data));
-            }
-            else {
+            } else {
                 window.location.replace("404Page.html");
             }
             console.log('The page was NOT loaded', error);
@@ -511,13 +508,12 @@ function transferToUserResume() {
     setupNavigation();
 
     var id = getParam('edit');
-    if(isEmpty(id)) {
+    if (isEmpty(id)) {
         $(".page").hide();
         $("#userResumesContainer").show();
         $('[itemprop="name"]').html(USER_NAME);
         listUserResumes(BASE_URL + "product/user");
-    }
-    else {
+    } else {
         transferToResumeForm(id);
     }
 
@@ -530,8 +526,7 @@ function transferToResumeForm(id) {
 
     if (id == 0) {
         $("#resumeForm").attr("action", "product/new")
-    }
-    else {
+    } else {
         $("#resumeForm").attr("action", "product/edit")
         $('input[name ="productId"]').val(id);
         var fullUrl = BASE_URL + "product/detail";
@@ -539,6 +534,20 @@ function transferToResumeForm(id) {
     }
 
     return false;
+}
+
+function transferToHome() {
+    var id = getParam('edit');
+    if (!isEmpty(id)) {
+        var domain = location.hostname;
+        if (isEmpty(domain)) {
+            domain = "home.html";
+        }
+        window.location.replace(domain);
+    }
+    else {
+        transferToUserResume();
+    }
 }
 
 function transfer(elementId, productId) {
