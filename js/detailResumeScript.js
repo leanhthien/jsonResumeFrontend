@@ -52,7 +52,7 @@ function init() {
 
                 $('#edit').click(function(){
                     console.log("Trigger edit button!");
-                    window.location.replace(dommain + "?edit=" + productId);
+                    window.location.replace(domain + "?edit=" + productId);
                 });
             
                 $('#back').click(function(){
