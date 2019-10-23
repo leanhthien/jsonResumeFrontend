@@ -26,10 +26,16 @@ function init() {
     }
     else {
         var productId = getParam('id');
+        var domain = location.hostname;
+
+        if(isEmpty(domain)) {
+            dommain = "home.html";
+        }
+
         if (!isEmpty(productId)) {
             TOKEN = window.localStorage.getItem('token');
             if (isEmpty(TOKEN)) {
-                window.location.replace("home.html?callback=true&id=" + productId);
+                window.location.replace(domain + "?callback=true&id=" + productId);                
             }
             else {
                 BASE_URL = window.localStorage.getItem('baseURL');
@@ -39,12 +45,14 @@ function init() {
                 var fullUrl = BASE_URL + "product/detail";
                 detailResume(fullUrl, productId, "");
                 $('#action-button').show();
+
+
                 $('#edit').click(function(){
-                    window.location.replace("Home.html?edit=" + productId);
+                    window.location.replace(domain + "?edit=" + productId);
                 });
             
                 $('#back').click(function(){
-                    window.location.replace("Home.html");
+                    window.location.replace(domain);
                 });
             }
         }

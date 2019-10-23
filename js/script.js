@@ -258,7 +258,11 @@ function listUserResumes(url) {
                     $('#userResumeList').html(allPartHtml);
                     $('#empty-resume-modal').hide();  
                     $('#share-link-modal').show(); 
-                    $('#share-link-content').val(location.hostname + "?url=" + BASE_URL + "&name=" + USER_NAME);   
+                    var domain = location.hostname;
+                    if(isEmpty(domain)) {
+                        dommain = location.pathname;
+                    }
+                    $('#share-link-content').val(domain + "?url=" + BASE_URL + "&name=" + USER_NAME);   
                 }
             }
             else {
