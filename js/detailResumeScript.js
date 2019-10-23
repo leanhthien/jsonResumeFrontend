@@ -18,6 +18,10 @@ function init() {
 
     var baseUrl = getParam('url');
 
+    $("#navigationHeader").load("_navForVer3.html");
+
+    setupNavigation();
+
     if (!isEmpty(baseUrl)) {
         var username = getParam('name');
         var fullUrl = baseUrl + "view";
@@ -57,12 +61,10 @@ function init() {
             }
         }
         else {
-            // window.location.replace("404Page.html");
-            console.log("Cannot find the page!");
+            window.location.replace("404Page.html");
+            // console.log("Cannot find the page!");
         }
     }
-
-    
 
 };
 

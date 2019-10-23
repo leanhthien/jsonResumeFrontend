@@ -102,21 +102,6 @@ function setupListener() {
 
 };
 
-function setupNavigation() {
-
-    BASE_URL = window.localStorage.getItem('baseURL');
-    TOKEN = window.localStorage.getItem('token');
-    if (isEmpty(TOKEN)) {
-        $('.guestNavigation').show();
-        $('.userNavigation').hide();
-    } else {
-        $('.guestNavigation').hide();
-        $('.userNavigation').show();
-        $('#usernameNavigation').html(USER_NAME);
-    }
-
-};
-
 /* 
  * Ajax call
  */
@@ -547,12 +532,6 @@ function backInEdit() {
         moveToViewResume(PRODUCT_ID)
     }
 
-}
-
-function transfer(elementId, productId) {
-    $(".page").hide();
-    $(elementId).show();
-    return false;
 }
 
 function moveToViewResume(productId) {
