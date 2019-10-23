@@ -7,8 +7,7 @@ var data;
 
 $(document).ready(function () {
 
-    $("#navigationHeader").load("_nav.html");
-
+    // $("#navigationHeader").load("_nav.html");
     checkDomain();
     setupListener();
 
@@ -32,7 +31,6 @@ function checkDomain() {
             transferToUserResume();
         }
     }
-
 };
 
 function setupListener() {
@@ -103,6 +101,22 @@ function setupListener() {
         
         return false;
     });
+
+};
+
+function setupNavigation() {
+
+    BASE_URL = window.localStorage.getItem('baseURL');
+    TOKEN = window.localStorage.getItem('token');
+    if (isEmpty(TOKEN)) {
+        $('.guestNavigation').show();
+        $('.userNavigation').hide();
+    }
+    else {
+        $('.guestNavigation').hide();
+        $('.userNavigation').show();
+        $('#usernameNavigation').html(USER_NAME);
+    }
 
 };
 
@@ -267,7 +281,7 @@ function detailResume(url, id) {
         success: function (response) {
 
             if (response.status == "Success") {
-
+                $('input[name ="productId"]').val(response.data.productId);
                 $('input[name ="name"]').val(response.data.name);
                 $('input[name ="jobTitle"]').val(response.data.jobTitle);
                 $('input[name ="address"]').val(response.data.address);
@@ -451,7 +465,6 @@ function logout(url) {
  */
 
 function transferToSetupDomain() {
-
     $(".page").hide();
     $("#setupDomainContainer").show();
     return false;
