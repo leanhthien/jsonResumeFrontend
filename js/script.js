@@ -84,7 +84,7 @@ function setupListener() {
     });
 
     $("#resumeForm").submit(function (e) {
-        alert("Trigger resumeForm submit!");
+        
         e.preventDefault();
 
         var BASE_URL = window.localStorage.getItem('baseURL');
@@ -133,7 +133,6 @@ function login(url, form) {
         data: form.serialize(),
         dataType: 'json',
         success: function (response) {
-            console.log('response', response);
             if (response.status == "Success") {
                 window.localStorage.setItem('token', response.data.token);
                 window.localStorage.setItem('userId', response.data.appUser.userId);
@@ -259,7 +258,7 @@ function listUserResumes(url) {
                     $('#userResumeList').html(allPartHtml);
                     $('#empty-resume-modal').hide();  
                     $('#share-link-modal').show(); 
-                    $('#share-link-content').html(location.hostname + "?url=" + BASE_URL + "&name=" + USER_NAME);   
+                    $('#share-link-content').val(location.hostname + "?url=" + BASE_URL + "&name=" + USER_NAME);   
                 }
             }
             else {
@@ -364,7 +363,7 @@ function editResume(url, form) {
         success: function (response) {
 
             if (response.status == "Success") {
-                moveToViewResume();
+                moveToViewResume(response.data.productId);
             } else {
                 $('#errorLogin').html(insertAlert(response.data));
             }
@@ -372,7 +371,7 @@ function editResume(url, form) {
         },
 
         error: function (request, status, error) {
-            insertAlert(request.responseText.data);
+            $('#errorLogin').html(insertAlert(request.responseText.data));
             console.log('The page was NOT loaded', error);
         },
 
@@ -396,7 +395,6 @@ function deleteResume(url, index) {
                 listUserResumes(BASE_URL + "product/user");
             } else {
                 $('#errorUserResume').html(insertAlert(response.data));
-                insertAlert("Cannot delete resume!")
             }
         },
 
@@ -507,7 +505,9 @@ function transferToResumeForm(id) {
     }
     else {
         $("#resumeForm").attr("action", "product/edit")
-        $('input[name ="id"]').val(id);
+        $('input[name ="productId"]').val(id);
+        var fullUrl = BASE_URL + "product/detail";
+        detailResume(fullUrl, id);
     }
 
     return false;
@@ -520,6 +520,7 @@ function transfer(elementId, productId) {
 }
 
 function moveToViewResume(productId) {
+
     window.location.replace("resume.html?id=" + productId);
 }
 

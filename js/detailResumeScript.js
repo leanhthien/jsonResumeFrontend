@@ -40,7 +40,8 @@ function init() {
             }
         }
         else {
-            window.location.replace("404Page.html");
+            // window.location.replace("404Page.html");
+            console.log("Cannot find the page!");
         }
     }
 
@@ -70,7 +71,7 @@ function detailResume(url, id, name) {
                 $('[itemprop="email"]').html(response.data.email);
                 $('[itemprop="website"]').html(response.data.website);
                 $('[itemprop="language"]').html(response.data.language);
-                $('[itemprop="about"]').html(response.data.about);
+                $('[itemprop="description"]').html(response.data.about);
                 $('[itemprop="work-experience"]').html(response.data.workExperience);
                 
             } else {
