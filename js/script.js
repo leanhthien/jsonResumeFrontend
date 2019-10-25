@@ -57,8 +57,14 @@ function setupListener() {
                 window.localStorage.setItem('baseURL', BASE_URL);
             }
         }
-
-        transferToLogin();
+        TOKEN = window.localStorage.getItem('token');
+        if (isEmpty(TOKEN)) {
+            transferToLogin();
+        }
+        else {
+            transferToUserResume();
+        }
+            
         return false;
     });
 
