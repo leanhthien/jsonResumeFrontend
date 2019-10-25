@@ -561,6 +561,9 @@ function getNav(id) {
             transferToUserResume();
             break;
         case '6':
+            transferToSetupDomain();
+            break;
+        case '7':
             logout('logout');
             break;
         default:
