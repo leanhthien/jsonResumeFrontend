@@ -583,8 +583,8 @@ function moveToViewResume(productId) {
 }
 
 function validateForm() {
-    var password = $('input[name ="password"]').val();
-    var retype = $('input[name ="retypePassword"]').val();
+    var password = $('#registrationForm input[name ="password"]').val();
+    var retype = $('#registrationForm input[name ="retypePassword"]').val();
     if (password != retype) {
         $('#samePassword').html(insertAlert("Password and Retype Password must be the same!"));
         return false;
