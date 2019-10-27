@@ -157,6 +157,7 @@ function getDomain() {
         dataType: 'json',
         success: function (response) {
             if (!isEmpty(response.DOMAIN)) {
+                console.log('Respone', response.DOMAIN);
                 BASE_URL = response.DOMAIN + "/my-app/api/";
                 window.localStorage.setItem('baseURL', BASE_URL);
                 checkShareResume();
@@ -190,15 +191,7 @@ function login(url, form) {
                 USER_ID = window.localStorage.getItem('userId');
                 USER_NAME = window.localStorage.getItem('username');
 
-                var callback = getParam('callback');
-
-                if (!isEmpty(callback)) {
-                    var productId = getParam('id');
-                    moveToViewResume(productId);
-                } else {
-                    setupNavigation();
-                    transferToUserResume();
-                }
+                transferToUserResume();
 
             } else {
                 $('#errorLogin').html(insertAlert(response.data));
@@ -308,7 +301,7 @@ function listUserResumes(url) {
                     } else {
                         domain = "https://" + location.hostname;
                     }
-                    $('#share-link-content').val(domain + "/resume.html?url=" + BASE_URL + "&name=" + USER_NAME);
+                    $('#share-link-content').val(domain + "?name=" + USER_NAME);
                 }
             } else {
                 $('#errorUserResume').html(insertAlert(response.data));
@@ -598,23 +591,11 @@ function transferToUserResume() {
 
     setupNavigation();
 
-    var nav = getParam('nav');
+    $(".page").hide();
+    $("#userResumesContainer").show();
+    $('[itemprop="name"]').html(USER_NAME);
+    listUserResumes(BASE_URL + "product/user");
 
-    if (isEmpty(nav)) {
-        var id = getParam('edit');
-        if (isEmpty(id)) {
-            $(".page").hide();
-            $("#userResumesContainer").show();
-            $('[itemprop="name"]').html(USER_NAME);
-            listUserResumes(BASE_URL + "product/user");
-        } else {
-            PRODUCT_ID = id;
-            transferToResumeForm(id);
-        }
-    } else {
-        window.history.pushState({}, document.title, domain);
-        getNav(nav);
-    }
     return false;
 }
 
