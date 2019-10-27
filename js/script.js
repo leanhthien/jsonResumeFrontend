@@ -149,7 +149,7 @@ function setupListener() {
 function getDomain() {
     $.ajax({
         type: "GET",
-        url: url,
+        url: "https://api.heroku.com/apps/jsonresumedemo/config-vars",
         headers: {
             'Accept': 'application/vnd.heroku+json; version=3',
             'Authorization': 'Bearer 51f661c8-37f8-4d57-a532-83ec9ac9f41a'
