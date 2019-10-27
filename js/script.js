@@ -147,6 +147,7 @@ function setupListener() {
  */
 
 function getDomain() {
+    console("Trigger get domain!")
     $.ajax({
         type: "GET",
         url: "https://api.heroku.com/apps/jsonresumedemo/config-vars",
