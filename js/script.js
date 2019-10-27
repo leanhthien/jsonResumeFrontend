@@ -5,14 +5,13 @@ var USER_ID = ""; // userId of user
 var USER_NAME = ""; // username of user
 var data;
 var PRODUCT_ID = 0;
-var domain= "";
+var domain = "";
 
 $(document).ready(function () {
 
     // $("#navigationHeader").load("_nav.html");
-    setupNavigation();
 
-    checkShareResume();
+    setupNavigation();
 
     checkDomain();
 
@@ -20,16 +19,13 @@ $(document).ready(function () {
 
 });
 
-
-function checkShareResume() {
-
-    var name = getParam('name');
-    if (!isEmpty(name)) {
-        transferToDetailResume("view", null)
-    }
-}
+/*
+ * Function for checking before loading page's content
+ */
 
 function checkDomain() {
+
+    $(".page").hide();
 
     BASE_URL = window.localStorage.getItem('baseURL');
     TOKEN = window.localStorage.getItem('token');
@@ -38,20 +34,35 @@ function checkDomain() {
 
     domain = location.origin;
 
-    if(!isDomainOfServer(domain)) {
+    if (!isDomainOfServer(domain)) {
         domain = "home.html";
     }
 
     if (isEmpty(BASE_URL)) {
-        transferToSetupDomain();
+        getDomain();
     } else {
-        if (isEmpty(TOKEN)) {
-            transferToLogin();
-        } else {
-            transferToUserResume();
-        }
+        checkShareResume();
     }
 };
+
+function checkShareResume() {
+
+    var name = getParam('name');
+    if (!isEmpty(name)) {
+        transferToDetailResume("view", null)
+    } else {
+        checkLogin();
+    }
+}
+
+function checkLogin() {
+    TOKEN = window.localStorage.getItem('token');
+    if (isEmpty(TOKEN)) {
+        transferToLogin();
+    } else {
+        transferToUserResume();
+    }
+}
 
 function setupListener() {
 
@@ -60,24 +71,19 @@ function setupListener() {
         e.preventDefault();
 
         var url = $('#domain').val();
-        var baseUrl = window.localStorage.getItem('baseURL');
+        var BASE_URL = window.localStorage.getItem('baseURL');
+
         if (!isEmpty(url)) {
             BASE_URL = url + "/my-app/api/";
             window.localStorage.setItem('baseURL', BASE_URL);
         } else {
-            if (isEmpty(baseUrl)) {
-                BASE_URL = "http://127.0.0.1:8080/my-app/api/";
-                window.localStorage.setItem('baseURL', BASE_URL);
+            if (!isEmpty(BASE_URL)) {
+                transferToLogin();
+            } else {
+                transferTo404Page("Cannot find domain");
             }
         }
-        TOKEN = window.localStorage.getItem('token');
-        if (isEmpty(TOKEN)) {
-            transferToLogin();
-        }
-        else {
-            transferToUserResume();
-        }
-            
+
         return false;
     });
 
@@ -126,11 +132,46 @@ function setupListener() {
         return false;
     });
 
+    $('#edit').click(function () {
+        transferToResumeForm(param);
+     });
+
+     $('#back').click(function () {
+         transferToUserResume();
+     });
+
 };
 
 /* 
  * Ajax call
  */
+
+function getDomain() {
+    $.ajax({
+        type: "GET",
+        url: url,
+        headers: {
+            'Accept': 'application/vnd.heroku+json; version=3',
+            'Authorization': 'Bearer 51f661c8-37f8-4d57-a532-83ec9ac9f41a'
+        },
+        dataType: 'json',
+        success: function (response) {
+            if (!isEmpty(response.DOMAIN)) {
+                BASE_URL = response.DOMAIN + "/my-app/api/";
+                window.localStorage.setItem('baseURL', BASE_URL);
+                checkShareResume();
+            } else {
+                transferToSetupDomain();
+            }
+        },
+
+        error: function (request, status, error) {
+            $("#errorLogin").html(insertAlert(jQuery.parseJSON(request.responseText).data));
+            console.log('The page was NOT loaded', error);
+        },
+
+    });
+}
 
 function login(url, form) {
     console.log('url -', url);
@@ -247,7 +288,7 @@ function listUserResumes(url) {
                             '<td>' + element.name + '</td>' +
                             '<td>' + element.jobTitle + '</td>' +
                             '<td>' + enableStar + '</td>' +
-                            '<td><a href="#" onclick="return moveToViewResume(' + element.productId + ');" >View</a></td>' +
+                            '<td><a href="#" onclick="return transferToDetailResume("product/detail", ' + element.productId + ');" >View</a></td>' +
                             '<td><a href="#" onclick="return transferToResumeForm(' + element.productId + ');" >Edit</a></td>' +
                             '<td>' + enableButton + '</td>' +
                             `<td><a href="" onclick="return deleteResume('product/delete',` + element.productId + ');" >Delete</a></td>' +
@@ -491,7 +532,7 @@ function logout(url) {
 
 function detail(url, id, name) {
     console.log('url -', url);
-    
+
     $.ajax({
         type: "GET",
         url: url,
@@ -507,7 +548,7 @@ function detail(url, id, name) {
             if (response.status == "Success") {
                 console.log("Get data success!");
 
-                $('[itemprop="name"]').html(`<b>`+ response.data.name +`</b>`);
+                $('[itemprop="name"]').html(`<b>` + response.data.name + `</b>`);
                 $('[itemprop="jobTitle"]').html(response.data.jobTitle);
                 $('[itemprop="address"]').html(response.data.address);
                 $('[itemprop="telephone"]').html(response.data.telephone);
@@ -516,7 +557,7 @@ function detail(url, id, name) {
                 $('[itemprop="language"]').html(response.data.language);
                 $('[itemprop="description"]').html(response.data.about);
                 $('[itemprop="work-experience"]').html(response.data.workExperience);
-                
+
             } else {
                 transferTo404Page();
                 console.log("Cannot get data!");
@@ -570,8 +611,7 @@ function transferToUserResume() {
             PRODUCT_ID = id;
             transferToResumeForm(id);
         }
-    }
-    else {
+    } else {
         window.history.pushState({}, document.title, domain);
         getNav(nav);
     }
@@ -594,29 +634,32 @@ function transferToResumeForm(id) {
     return false;
 }
 
-function transferToDetailResume(action, id) {
+function transferToDetailResume(action, param) {
     $(".page").hide();
     $("#resumeDetailContainer").show();
 
+    var fullUrl = BASE_URL + action;
+    if (action.includes("view")) {
+        detail(fullUrl, "", param);
+        $('#action-button').hide();
+    } else {
+        detail(fullUrl, param, "");
+        $('#action-button').show();
+    }
+
 }
 
-function transferTo404Page() {
+function transferTo404Page(message) {
     $(".page").hide();
     $("#r404PageContainer").show();
-}
 
-function backInEdit() {
-    if (PRODUCT_ID == 0) {
-        transferToUserResume();
-    }
-    else {
-        window.history.pushState({}, document.title, domain);
-        moveToViewResume(PRODUCT_ID)
+    if (message != null) {
+        $("#errorContent").html(message);
     }
 }
 
 function getNav(id) {
-    switch(id) {
+    switch (id) {
         case '1':
             checkDomain();
             break;
@@ -641,11 +684,7 @@ function getNav(id) {
         default:
             console.log("Unknown id!", id)
             transferToSetupDomain();
-      }
-}
-
-function moveToViewResume(productId) {
-    window.location.replace("resume.html?id=" + productId);
+    }
 }
 
 function validateForm() {
@@ -653,6 +692,53 @@ function validateForm() {
     var retype = $('#registrationForm input[name ="retypePassword"]').val();
     if (password != retype) {
         $('#samePassword').html(insertAlert("Password and Retype Password must be the same!"));
+        return false;
+    }
+    return true;
+}
+
+/*
+ * Script for common use
+ */
+
+function setupNavigation() {
+
+    console.log("Trigger set up navigation")
+
+    var token = window.localStorage.getItem('token');
+    var username = window.localStorage.getItem('username');
+
+    if (isEmpty(token)) {
+        $('.guestNavigation').show();
+        $('.userNavigation').hide();
+    } else {
+        $('.guestNavigation').hide();
+        $('.userNavigation').show();
+        $('#usernameNavigation').html(username);
+    }
+
+};
+
+function getParam(param) {
+    const searchParams = new URLSearchParams(window.location.search);
+
+    if (searchParams.has(param)) {
+        let value = searchParams.get(param);
+        return value;
+    }
+    return "";
+}
+
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
+function insertAlert(messege) {
+    return '<div class="alert alert-danger" role="alert">' + messege + '</div>';
+}
+
+function isDomainOfServer(url) {
+    if (url.includes("file://")) {
         return false;
     }
     return true;
