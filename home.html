@@ -18,6 +18,12 @@
     <script language="JavaScript" type="text/javascript" src="js/utilsScript.js"></script>
     <script language="JavaScript" type="text/javascript" src="js/script.js"></script>
 
+    <!-- Script for detail resume -->
+
+
+
+    <!-- End script for detail resume -->
+
 </head>
 
 <body>
@@ -298,6 +304,114 @@
                 <div id="errorResumeForm" style="padding-bottom: 50px;"></div>
             </div>
 
+        </div>
+
+        <!-- This page for detail -->
+        <div id="resumeDetailContainer" class="page container-fluid" >
+            <div class="row main clearfix">
+                <a class="js-floating-nav-trigger floating-nav-trigger" href="#">
+                    <i class="icon-bars"></i>
+                    <span class="close-icon">&times;</span>
+                </a>
+                <nav class="floating-nav js-floating-nav">
+                    <ul class="list-unstyled">
+                        <li><a href="#about"><i class="mr-10 icon-board"></i>About</a></li>
+                        <li><a href="#work-experience"><i class="mr-10 icon-office"></i>Work Experience</a></li>
+                    </ul>
+                </nav>
+                <section class="col-md-3 card-wrapper profile-card-wrapper affix">
+                    <div class="card profile-card">
+                        <span class="profile-pic-container">
+                            <div class="profile-pic">
+                                <img class="media-object img-circle center-block" data-src="holder.js/100x100"
+                                    alt="Richard Hendriks"
+                                    src="https://s.gravatar.com/avatar/7e6be1e623fb85adde3462fa8587caf2?s=100&amp;r=pg&amp;d=mm"
+                                    itemprop="image" />
+                            </div>
+                            <div class="name-and-profession text-center">
+                                <h3 itemprop="name"></h3>
+                                <h5 class="text-muted" itemprop="jobTitle"></h5>
+                            </div>
+                        </span>
+                        <hr />
+                        <div class="contact-details clearfix">
+                            <div class="detail">
+                                <span class="icon"><i class="icon fs-lg icon-location"></i></span>
+                                <span class="info" itemprop="address"></span>
+                            </div>
+                            <div class="detail">
+                                <span class="icon"><i class="icon fs-lg icon-phone"></i></span>
+                                <span class="info" itemprop="telephone"></span>
+                            </div>
+                            <div class="detail">
+                                <span class="icon"><i class="icon fs-lg icon-mail"></i></span>
+                                <span class="info"><a class="link-disguise" href="#" itemprop="email"></a></span>
+                            </div>
+                            <div class="detail">
+                                <span class="icon"><i class="icon fs-lg icon-link"></i></span>
+                                <span class="info"><a href="" target="_blank"></a></span>
+                            </div>
+                            <div class="detail">
+                                <span class="icon" title="Languages I speak"><i class="icon fs-lg icon-language"></i></span>
+                                <span class="info"></span>
+                            </div>
+                        </div>
+                        <hr />
+    
+                        <div id="action-button" class="text-center">
+                           
+                            <a id="edit" href="#" class="btn btn-info" role="button" >Edit</a>
+    
+                            <a id="back" href="#" class="btn btn-danger" role="button" >Back</a>
+                            
+                        </div>
+    
+                    </div>
+                </section>
+                <section class="col-md-9 card-wrapper pull-right">
+                    <div class="card background-card">
+                        <h4 class="text-uppercase">Background</h4>
+                        <hr />
+                        <div class="background-details">
+                            <div class="detail" id="about">
+                                <div class="icon">
+                                    <i class="fs-lg icon-board"></i><span class="mobile-title">About</span>
+                                </div>
+                                <div class="info">
+                                    <h4 class="title text-uppercase">About</h4>
+                                    <div class="card card-nested">
+                                        <div class="content mop-wrapper" itemprop="description"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="detail" id="work-experience">
+                                <div class="icon">
+                                    <i class="fs-lg icon-office"></i>
+                                    <span class="mobile-title">Work Experience</span>
+                                </div>
+                                <div class="info">
+                                    <h4 class="title text-uppercase">Work Experience</h4>
+                                    <ul class="list-unstyled clear-margin">
+                                        <li class="card card-nested clearfix">
+                                            <div class="content" itemprop="work-experience"></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    
+        <!-- 404Page -->
+        <div id="404PageContainer" class="page container">
+
+            <div style="padding-top: 75px;">
+                <h2 class="text-center">Page not found</h2>
+                <p class="text-center">The page you are looking for is not exist</p>
+            </div>
+    
         </div>
 
     </div>

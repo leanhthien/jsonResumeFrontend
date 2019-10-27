@@ -11,10 +11,23 @@ $(document).ready(function () {
 
     // $("#navigationHeader").load("_nav.html");
     setupNavigation();
+
+    checkShareResume();
+
     checkDomain();
+
     setupListener();
 
 });
+
+
+function checkShareResume() {
+
+    var name = getParam('name');
+    if (!isEmpty(name)) {
+        transferToDetailResume("view", null)
+    }
+}
 
 function checkDomain() {
 
@@ -476,6 +489,48 @@ function logout(url) {
     return false;
 };
 
+function detail(url, id, name) {
+    console.log('url -', url);
+    
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: {
+            id: id,
+            name: name,
+            token: TOKEN,
+            userId: USER_ID
+        },
+        dataType: 'json',
+        success: function (response) {
+
+            if (response.status == "Success") {
+                console.log("Get data success!");
+
+                $('[itemprop="name"]').html(`<b>`+ response.data.name +`</b>`);
+                $('[itemprop="jobTitle"]').html(response.data.jobTitle);
+                $('[itemprop="address"]').html(response.data.address);
+                $('[itemprop="telephone"]').html(response.data.telephone);
+                $('[itemprop="email"]').html(response.data.email);
+                $('[itemprop="website"]').html(response.data.website);
+                $('[itemprop="language"]').html(response.data.language);
+                $('[itemprop="description"]').html(response.data.about);
+                $('[itemprop="work-experience"]').html(response.data.workExperience);
+                
+            } else {
+                transferTo404Page();
+                console.log("Cannot get data!");
+            }
+        },
+
+        error: function (request, status, error) {
+            transferTo404Page();
+            console.log('The page was NOT loaded', error);
+        },
+
+    });
+};
+
 /*
  * Transfer function to show page
  */
@@ -537,6 +592,17 @@ function transferToResumeForm(id) {
     }
 
     return false;
+}
+
+function transferToDetailResume(action, id) {
+    $(".page").hide();
+    $("#resumeDetailContainer").show();
+
+}
+
+function transferTo404Page() {
+    $(".page").hide();
+    $("#r404PageContainer").show();
 }
 
 function backInEdit() {
