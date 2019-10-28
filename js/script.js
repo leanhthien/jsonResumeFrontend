@@ -7,6 +7,12 @@ var data;
 var PRODUCT_ID = 0;
 var domain = "";
 
+WebFontConfig = {
+    google: {
+        families: ['Lato:300,400,700:latin']
+    }
+};
+
 $(document).ready(function () {
 
     // $("#navigationHeader").load("_nav.html");
@@ -34,8 +40,8 @@ function checkDomain() {
 
     domain = location.origin;
 
-    if (!isDomainOfServer(domain)) {
-        domain = "home.html";
+    if (isDomainOfLocal(domain)) {
+        domain = location.href;
     }
 
     if (isEmpty(BASE_URL)) {
@@ -49,7 +55,7 @@ function checkShareResume() {
 
     var name = getParam('name');
     if (!isEmpty(name)) {
-        transferToDetailResume("view", null)
+        transferToDetailResume("view", name)
     } else {
         checkLogin();
     }
@@ -134,11 +140,13 @@ function setupListener() {
 
     $('#edit').click(function () {
         transferToResumeForm(param);
-     });
+    });
 
-     $('#back').click(function () {
-         transferToUserResume();
-     });
+    $('#back').click(function () {
+        transferToUserResume();
+    });
+
+    initForDetailPage();
 
 };
 
@@ -282,7 +290,7 @@ function listUserResumes(url) {
                             '<td>' + element.name + '</td>' +
                             '<td>' + element.jobTitle + '</td>' +
                             '<td>' + enableStar + '</td>' +
-                            '<td><a href="#" onclick="return transferToDetailResume("product/detail", ' + element.productId + ');" >View</a></td>' +
+                            `<td><a href="#" onclick="return transferToDetailResume('product/detail', ` + element.productId + `);" >View</a></td>` +
                             '<td><a href="#" onclick="return transferToResumeForm(' + element.productId + ');" >Edit</a></td>' +
                             '<td>' + enableButton + '</td>' +
                             `<td><a href="" onclick="return deleteResume('product/delete',` + element.productId + ');" >Delete</a></td>' +
@@ -296,12 +304,6 @@ function listUserResumes(url) {
                     $('#userResumeList').html(allPartHtml);
                     $('#empty-resume-modal').hide();
                     $('#share-link-modal').show();
-                    var domain = location.hostname;
-                    if (isEmpty(domain)) {
-                        dommain = location.pathname;
-                    } else {
-                        domain = "https://" + location.hostname;
-                    }
                     $('#share-link-content').val(domain + "?name=" + USER_NAME);
                 }
             } else {
@@ -679,6 +681,41 @@ function validateForm() {
     return true;
 }
 
+function initForDetailPage() {
+    var toggleFloatingMenu = function () {
+        $('.js-floating-nav').toggleClass('is-visible');
+        $('.js-floating-nav-trigger').toggleClass('is-open');
+    };
+
+    $(".background-card").css("min-height", window.screen.availHeight + "px");
+    $("[data-toggle=tooltip]").tooltip();
+    $('.js-floating-nav-trigger').on('click', function (e) {
+        e.preventDefault();
+        toggleFloatingMenu();
+    });
+    $('.js-floating-nav a').on('click', toggleFloatingMenu);
+
+    $("#remaining-profiles").on('show.bs.collapse', function () {
+        $('.js-profiles-collapse > i')
+            .removeClass('icon-chevron-down')
+            .addClass('icon-chevron-up');
+    });
+
+    $("#remaining-profiles").on('hidden.bs.collapse', function () {
+        $('.js-profiles-collapse > i')
+            .removeClass('icon-chevron-up')
+            .addClass('icon-chevron-down');
+    });
+
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+}
+
 /*
  * Script for common use
  */
@@ -719,9 +756,9 @@ function insertAlert(messege) {
     return '<div class="alert alert-danger" role="alert">' + messege + '</div>';
 }
 
-function isDomainOfServer(url) {
+function isDomainOfLocal(url) {
     if (url.includes("file://")) {
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
